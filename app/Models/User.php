@@ -17,14 +17,13 @@ use Spatie\Permission\Traits\HasRoles;
 /**
  * @property int $id
  * @property string $name
- * @property string $email
  * @property Carbon|null $email_verified_at
  * @property string $password
  * @property string|null $remember_token
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  */
-#[Fillable(['name', 'username', 'password','ssn','email','phone','whatsapp','address','role','active'])]
+#[Fillable(['name', 'username', 'password','ssn','phone','whatsapp','address','role','active','mosque_id','department_id','view'])]
 #[Hidden(['password', 'remember_token'])]
 class User extends Authenticatable
 {
@@ -54,5 +53,15 @@ class User extends Authenticatable
             ->take(2)
             ->map(fn ($word) => Str::substr($word, 0, 1))
             ->implode('');
+    }
+
+    public function mosque()
+    {
+        return $this->belongsTo(mosque::class);
+    }
+
+    public function department()
+    {
+        return $this->belongsTo(department::class);
     }
 }

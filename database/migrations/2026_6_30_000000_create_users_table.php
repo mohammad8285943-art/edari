@@ -16,13 +16,15 @@ return new class extends Migration
             $table->string('name');
             $table->string('ssn');
             $table->string('username')->unique();
-            $table->string('email')->unique();
             $table->string('password');
             $table->string('phone')->nullable();
             $table->string('whatsapp')->nullable();
             $table->string('address')->nullable();
             $table->string('role');
             $table->string('active')->default(1);
+            $table->foreignId('mosque_id')->constrained('mosque');
+            $table->foreignId('department_id')->constrained('department');
+            $table->string('view')->default(3);
             $table->rememberToken();
             $table->timestamps();
             $table->softDeletes();

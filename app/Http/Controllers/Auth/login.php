@@ -19,14 +19,8 @@ class login extends Controller
             'username' => 'required|string|max:255',
             'password' => 'required|string|min:8',
         ]);
-        if (Auth::guard('web')->attempt(['username' => $request->username, 'password' => $request->password])) {
-            if (auth()->user()->active == 1) {
-                                return redirect()->route('main');
-
-            }else {
-                Auth::guard('web')->logout();
-                return redirect()->route('login')->with('error', 'Your account is inactive or deleted');
-            }
+        if (Auth::guard('web')->attempt(['username' => $request->username, 'password' => $request->password]) && auth()->user()->active == 1) {
+            return redirect()->route('main');
         } else {
             return redirect()->route('login')->with('error', 'Invalid username or password');
         }
