@@ -19,4 +19,9 @@ class mosque extends Model
     {
         return $this->hasMany(User::class);
     }
+
+    public function orphans()
+    {
+        return $this->hasMany(Orphan::class);
+    }
 }

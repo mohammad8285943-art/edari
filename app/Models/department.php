@@ -20,4 +20,9 @@ class department extends Model
     {
         return $this->hasMany(User::class);
     }
+
+    public function Orphans()
+    {
+        return $this->hasMany(Orphan::class);
+    }
 }
