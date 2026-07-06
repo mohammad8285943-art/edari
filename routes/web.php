@@ -2,7 +2,9 @@
 
 use App\Http\Controllers\Auth\login;
 use App\Livewire\Main;
+use App\Livewire\OrphanForm;
 use App\Livewire\OrphanIndex;
+use App\Livewire\OrphanShow;
 use App\Livewire\UserIndex;
 use App\Livewire\UserPermissions;
 use Illuminate\Support\Facades\Route;
@@ -23,6 +25,9 @@ Route::group(['middleware' => ['auth']], function () {
 
     Route::group(['middleware' => ['permission:orphan.view']], function () {
         Route::livewire('/orphan', OrphanIndex::class)->name('orphan.index');
+    Route::get('/orphans/create', OrphanForm::class)->name('orphans.create');
+    Route::get('/orphans/edit/{id}', OrphanForm::class)->name('orphans.edit');
+    Route::get('/orphans/show/{id}', OrphanShow::class)->name('orphans.show');
     });
-
+    
 });

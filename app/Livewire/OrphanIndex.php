@@ -13,7 +13,7 @@ use Livewire\Component;
 use Livewire\WithPagination;
 use Maatwebsite\Excel\Facades\Excel;
 
-#[Layout('layout.app', ['title' => 'إدارة قاعدة بيانات الأيتام'])]
+#[Layout('layout.app', ['title' => 'بيانات الأيتام'])]
 class OrphanIndex extends Component
 {
     use WithPagination;
