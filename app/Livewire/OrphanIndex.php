@@ -8,6 +8,7 @@ use App\Models\Mosque;
 use App\Models\Orphan;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Livewire\Attributes\Layout;
 use Livewire\Component;
 use Livewire\WithPagination;
@@ -39,11 +40,15 @@ class OrphanIndex extends Component
 
     public $filterSex = '';
 
-    public $filterHealth = '';
+    public $filterOrphanStatus = '';
 
     public $filterDepartment = '';
 
     public $filterMosque = '';
+
+    public $filterHealth = '';
+
+    public $filterSponsorship = '';
 
     // متغيرات حفظ الحالات الثابتة عند الضغط على زر التصفية
     public $appliedSsn = '';
@@ -68,9 +73,13 @@ class OrphanIndex extends Component
 
     public $appliedHealth = '';
 
+    public $appliedOrphanStatus = '';
+
     public $appliedDepartment = '';
 
     public $appliedMosque = '';
+
+    public $appliedSponsorship = '';
 
     public function applyFilter(): void
     {
@@ -87,6 +96,8 @@ class OrphanIndex extends Component
         $this->appliedAgeMax = $this->ageMax;
         $this->appliedSex = $this->filterSex;
         $this->appliedHealth = $this->filterHealth;
+        $this->appliedOrphanStatus = $this->filterOrphanStatus;
+        $this->appliedSponsorship = $this->filterSponsorship;
 
         $this->appliedDepartment = $user->view == 1 ? $this->filterDepartment : $user->department_id;
         $this->appliedMosque = $user->view == 3 ? $user->mosque_id : $this->filterMosque;
@@ -109,13 +120,13 @@ class OrphanIndex extends Component
         $this->filterHealth = '';
         $this->filterDepartment = Auth::user()->view == 1 ? '' : Auth::user()->department_id;
         $this->filterMosque = Auth::user()->view == 3 ? Auth::user()->mosque_id : '';
-
+        $this->filterOrphanStatus = '';
+        $this->filterSponsorship = '';
         $this->applyFilter();
     }
 
     protected function buildOrphansQuery()
     {
-        $this->applyFilter();
         $query = Orphan::query()->with(['department', 'mosque']);
 
         if (! empty($this->appliedSsn)) {
@@ -142,6 +153,13 @@ class OrphanIndex extends Component
         if (! empty($this->appliedSex)) {
             $query->where('sex', $this->appliedSex);
         }
+        // فلتر حالة اليتيم
+        if (! empty($this->appliedOrphanStatus)) {
+            $query->where(
+                'حالة_اليتيم_الناجي_الوحيد_يتيم_الأبوين',
+                $this->appliedOrphanStatus
+            );
+        }
 
         if (! empty($this->appliedAgeMin)) {
             $query->whereDate('barth', '<=', Carbon::today()->subYears($this->appliedAgeMin));
@@ -160,9 +178,27 @@ class OrphanIndex extends Component
                 $query->where('health', '!=', 'جيدة');
             }
         }
+
+        // فلتر حالة الكفالة (مكفول / غير مكفول)
+        if (! empty($this->appliedSponsorship)) {
+            if ($this->appliedSponsorship === 'unsupported') {
+                $query->whereNotExists(function ($q) {
+                    $q->select(DB::raw(1))
+                        ->from('guarantees')
+                        ->whereColumn('guarantees.ssn', 'orphan.SSN');
+                });
+            } elseif ($this->appliedSponsorship === 'supported') {
+                $query->whereExists(function ($q) {
+                    $q->select(DB::raw(1))
+                        ->from('guarantees')
+                        ->whereColumn('guarantees.ssn', 'orphan.SSN');
+                });
+            }
+        }
+
         if (! empty($this->appliedMosque)) {
             $query->where('mosque_id', $this->appliedMosque);
-        }elseif (! empty($this->appliedDepartment)) {
+        } elseif (! empty($this->appliedDepartment)) {
             $query->where('department_id', $this->appliedDepartment);
         }
 
@@ -183,11 +219,19 @@ class OrphanIndex extends Component
 
         if ($user->view == 1) {
             return Department::all();
-
         }
 
         return collect();
+    }
 
+    // delete orphan
+    public function deleteOrphan($orphanId)
+    {
+        abort_unless(Auth::user()->can('orphan.delete'), 403);
+        $orphan = Orphan::find($orphanId);
+        if ($orphan) {
+            $orphan->delete();
+        }
     }
 
     protected function getMosques()
@@ -197,9 +241,8 @@ class OrphanIndex extends Component
         if ($user->view == 3) {
             // يرى المسجد الخاص به فقط
             return collect();
-
         } elseif ($user->view == 2) {
-            // يرى جميع المساجد التابعة لقسمه (تأكد من اسم الحقل department_id في جدول المساجد)
+            // يرى جميع المساجد التابعة لقسمه
             return Mosque::where('department_id', $user->department_id)->get();
         }
 
@@ -209,13 +252,25 @@ class OrphanIndex extends Component
 
     public function render()
     {
-        $orphansPaginated = $this->buildOrphansQuery()->latest('id')->paginate(15);
+        $baseQuery = $this->buildOrphansQuery();
+
+        // تم تغيير orphans.SSN إلى orphan.SSN
+        $sponsoredCount = (clone $baseQuery)
+            ->whereExists(function ($q) {
+                $q->select(DB::raw(1))
+                    ->from('guarantees')
+                    ->whereColumn('guarantees.ssn', 'orphan.SSN');
+            })
+            ->count();
+
+        $orphansPaginated = (clone $baseQuery)->latest('orphan.id')->paginate(15);
 
         return view('livewire.orphan-index', [
-            'orphans' => $orphansPaginated,
-            'totalCount' => $orphansPaginated->total(),
-            'departments' => $this->getDepartments(),
-            'mosques' => $this->getMosques(),
+            'orphans'        => $orphansPaginated,
+            'totalCount'     => $orphansPaginated->total(),
+            'sponsoredCount' => $sponsoredCount,
+            'departments'    => $this->getDepartments(),
+            'mosques'        => $this->getMosques(),
         ]);
     }
 }

@@ -13,11 +13,11 @@ class OrphanShow extends Component
 
     public function mount(int $id): void
     {
-        // جلب بيانات اليتيم مع العلاقات المحملة مسبقاً لتحسين الأداء
+        // جلب بيانات اليتيم مع العلاقات المحملة مسبقاً
         $this->orphan = Orphan::with(['department', 'mosque'])->findOrFail($id);
     }
 
-    public function render()
+public function render()
     {
         return view('livewire.orphan-show');
     }

@@ -25,4 +25,14 @@ class department extends Model
     {
         return $this->hasMany(Orphan::class);
     }
+
+    public function guarantees()
+    {
+        return $this->hasMany(guarantee::class);
+    }
+
+    public function widows()
+    {
+        return $this->hasMany(widow::class);
+    }
 }

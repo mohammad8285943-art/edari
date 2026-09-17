@@ -34,6 +34,9 @@ class OrphansExport implements FromQuery, WithHeadings, WithMapping, ShouldAutoS
             'رقم الهوية (SSN)',
             'الاسم الكامل',
             'تاريخ الميلاد',
+            'رقم المحفظة',
+            'اسم صاحب المحفظة',
+            'نوع المحفظة',
             'العمر',
             'الجنس',
             'الحالة الصحية',
@@ -72,8 +75,6 @@ class OrphansExport implements FromQuery, WithHeadings, WithMapping, ShouldAutoS
             'مكان التواجد الحالي',
             'المحافظة',
             'المدينة / الحي',
-            'رقم الشعبة',
-            'رقم المسجد',
             'حالة اليتيم الناجي الوحيد يتيم الأبوين',
             'الشعبة',
             'المسجد'
@@ -90,6 +91,9 @@ class OrphansExport implements FromQuery, WithHeadings, WithMapping, ShouldAutoS
             $orphan->SSN,
             $orphan->name,
             $orphan->barth ? $orphan->barth->format('Y-m-d') : '',
+            $orphan->wallet_number,
+            $orphan->wallet_owner_name,
+            $orphan->wallet_type,
             $orphan->age,
             $orphan->sex,
             $orphan->health,
@@ -128,10 +132,8 @@ class OrphansExport implements FromQuery, WithHeadings, WithMapping, ShouldAutoS
             $orphan->مكان_التواجد_الحالي,
             $orphan->المحافظة,
             $orphan->المدينة_الحي,
-            $orphan->department_id,
-            $orphan->mosque_id,
             $orphan->حالة_اليتيم_الناجي_الوحيد_يتيم_الأبوين,
-            
+
             // علاقات إضافية لجلب الأسماء النصية للشعبة والمسجد بدلاً من الأرقام فقط
             $orphan->department?->name ?? 'غير محدد',
             $orphan->mosque?->name ?? 'غير محدد',

@@ -5,10 +5,12 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Orphan extends Model
 {
-use HasFactory;
+    use HasFactory,SoftDeletes;
 
     // اسم الجدول في قاعدة البيانات
     protected $table = 'orphan';
@@ -68,6 +70,14 @@ use HasFactory;
         'department_id',
         'mosque_id',
         'حالة_اليتيم_الناجي_الوحيد_يتيم_الأبوين',
+        'personal_image',
+        'birth_image',
+        'father_image',
+        'mother_image',
+        'agent_image',
+        'wallet_number',
+    'wallet_owner_name',
+    'wallet_type',
     ];
 
     /**
@@ -110,5 +120,17 @@ use HasFactory;
     {
         return $this->belongsTo(Mosque::class, 'mosque_id', 'id');
     }
-    
+
+    /**
+     * علاقة اليتيم بالضامن الخاص به
+     */
+    public function guarantees():HasMany
+    {
+        return $this->hasMany(guarantee::class, 'ssn', 'SSN');
     }
+
+    public function widow(): BelongsTo
+    {
+        return $this->belongsTo(widow::class, 'm_ssn', 'ssn');
+    }
+}

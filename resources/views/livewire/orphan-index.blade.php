@@ -1,31 +1,42 @@
 <main class="flex-1 overflow-y-auto p-4 space-y-4 relative text-xs">
 
     {{-- قسم الإحصائيات العلوي وأزرار التحكم (إضافة وتصدير) --}}
-    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 bg-white p-3 rounded-xl shadow-sm border border-gray-100">
-        <div class="bg-indigo-50 border border-indigo-100 px-3 py-1.5 rounded-lg flex items-center gap-3">
-            <span class="text-gray-600 font-medium">إجمالي الأيتام المتاحين:</span>
-            <span class="text-indigo-600 font-bold text-base">{{ $totalCount }}</span>
+    <div
+        class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 bg-white p-3 rounded-xl shadow-sm border border-gray-100">
+        <div class="flex flex-wrap items-center gap-2">
+            {{-- إجمالي الأيتام --}}
+            <div class="bg-indigo-50 border border-indigo-100 px-3 py-1.5 rounded-lg flex items-center gap-3">
+                <span class="text-gray-600 font-medium">إجمالي الأيتام المتاحين:</span>
+                <span class="text-indigo-600 font-bold text-base">{{ $totalCount }}</span>
+            </div>
+
+            {{-- بطاقة عدد المكفولين المضافة --}}
+            <div class="bg-emerald-50 border border-emerald-100 px-3 py-1.5 rounded-lg flex items-center gap-3">
+                <span class="text-gray-600 font-medium">عدد المكفولين:</span>
+                <span class="text-emerald-600 font-bold text-base">{{ $sponsoredCount }}</span>
+            </div>
         </div>
-        
         <div class="flex flex-col sm:flex-row items-center gap-2 w-full sm:w-auto">
             {{-- زر إضافة يتيم جديد المضاف حديثاً --}}
             <a href="{{ route('orphans.create') }}" wire:navigate
                 class="w-full sm:w-auto bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-1.5 rounded-lg font-medium transition flex items-center justify-center gap-1.5 cursor-pointer shadow-sm">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24"
+                    stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
                 </svg>
                 إضافة يتيم جديد
             </a>
 
             @can('orphan.export')
-            <button wire:click="exportToExcel"
-                class="w-full sm:w-auto bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-1.5 rounded-lg font-medium transition flex items-center justify-center gap-1.5 cursor-pointer shadow-sm">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                </svg>
-                تصدير النتائج (Excel)
-            </button>
+                <button wire:click="exportToExcel"
+                    class="w-full sm:w-auto bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-1.5 rounded-lg font-medium transition flex items-center justify-center gap-1.5 cursor-pointer shadow-sm">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                    </svg>
+                    تصدير النتائج (Excel)
+                </button>
             @endcan
         </div>
     </div>
@@ -63,6 +74,30 @@
                 <label class="block font-medium text-gray-500 mb-1">هوية اليتيم</label>
                 <input type="text" wire:model="searchSsn" placeholder="9 خانات..."
                     class="w-full px-2.5 py-1.5 border border-black rounded-lg outline-none focus:border-indigo-500 text-xs">
+            </div>
+
+            <div>
+                <label class="block font-medium text-gray-500 mb-1">حالة اليتيم</label>
+                <select wire:model="filterOrphanStatus"
+                    class="w-full px-2.5 py-1.5 border border-black rounded-lg outline-none focus:border-indigo-500 text-xs bg-white">
+                    <option value="">جميع الحالات</option>
+                    <option value="ناجي وحيد">ناجي وحيد</option>
+                    <option value="يتيم الأبوين">يتيم الأبوين</option>
+                    <option value="يتيم الأب">يتيم الأب</option>
+                    <option value="يتيم الأم">يتيم الأم</option>
+                    <option value="أب مفقود">أب مفقود</option>
+                </select>
+            </div>
+
+            {{-- فلتر الكفالة الجديد --}}
+            <div>
+                <label class="block font-medium text-gray-500 mb-1">حالة الكفالة</label>
+                <select wire:model="filterSponsorship"
+                    class="w-full px-2 py-1.5 border border-black rounded-lg outline-none focus:border-indigo-500 text-xs bg-white">
+                    <option value="">الكل (مكفول وغير مكفول)</option>
+                    <option value="unsupported">غير مكفول فقط (استبعاد المكفولين)</option>
+                    <option value="supported">مكفول فقط</option>
+                </select>
             </div>
 
             {{-- فلاتر الأب --}}
@@ -130,7 +165,7 @@
                     <option value="not_good">يعاني من مرض (ليست جيدة)</option>
                 </select>
             </div>
-            
+
             @if (auth()->user()->view == 1)
                 <div>
                     <label class="block font-medium text-gray-500 mb-1">الشعبة (تلغى عند تحديد المسجد)</label>
@@ -143,7 +178,7 @@
                     </select>
                 </div>
             @endif
-            
+
             @if (auth()->user()->view != 3)
                 <div>
                     <label class="block font-medium text-gray-500 mb-1">المسجد</label>
@@ -183,23 +218,26 @@
                         <th class="p-3">الأم</th>
                         <th class="p-3">الوكيل والنطاق</th>
                         <th class="p-3">أرقام التواصل</th>
-                        <th class="p-3 text-center">العمليات</th> {{-- العمود الجديد --}}
+                        <th class="p-3 text-center">العمليات</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-100 text-gray-700">
                     @forelse($orphans as $orphan)
                         <tr class="hover:bg-gray-50/30 transition">
                             <td class="p-3">
-                                <a href="{{ route('orphans.show',['id'=>$orphan->id]) }}">
-                                <div class="font-bold text-gray-900">{{ $orphan->name }}</div>
-                                <div class="text-gray-400 mt-0.5">{{ $orphan->SSN }}</div>
-                            </a></td>
+                                <a href="{{ route('orphans.show', ['id' => $orphan->id]) }}">
+                                    <div class="font-bold text-gray-900">{{ $orphan->name }}</div>
+                                    <div class="text-gray-400 mt-0.5">{{ $orphan->SSN }}</div>
+                                </a>
+                            </td>
                             <td class="p-3 space-y-0.5">
                                 <div><span class="text-gray-400">الميلاد:</span>
                                     {{ $orphan->barth ? $orphan->barth->format('Y-m-d') : '-' }}</div>
                                 <div class="flex items-center gap-1.5 mt-0.5">
-                                    <span class="px-1.5 py-0.2 bg-gray-100 rounded text-[10px] font-medium">{{ $orphan->sex }}</span>
-                                    <span class="px-1.5 py-0.2 rounded text-[10px] font-medium {{ $orphan->health == 'جيدة' ? 'bg-green-50 text-green-700' : 'bg-red-50 text-red-700' }}">
+                                    <span
+                                        class="px-1.5 py-0.2 bg-gray-100 rounded text-[10px] font-medium">{{ $orphan->sex }}</span>
+                                    <span
+                                        class="px-1.5 py-0.2 rounded text-[10px] font-medium {{ $orphan->health == 'جيدة' ? 'bg-green-50 text-green-700' : 'bg-red-50 text-red-700' }}">
                                         الصحة: {{ $orphan->health }}
                                     </span>
                                 </div>
@@ -211,35 +249,55 @@
                             <td class="p-3">
                                 <div class="font-medium text-gray-800">{{ $orphan->m_name ?? '-' }}</div>
                                 <div class="text-gray-400 text-[11px]">{{ $orphan->m_ssn }}
-                                    <span class="px-1.5 py-0.5 rounded text-[10px] font-medium {{ $orphan->m_d == 'حي' ? 'bg-green-50 text-green-700' : 'bg-red-50 text-red-700' }}">
+                                    <span
+                                        class="px-1.5 py-0.5 rounded text-[10px] font-medium {{ $orphan->m_d == 'حي' ? 'bg-green-50 text-green-700' : 'bg-red-50 text-red-700' }}">
                                         {{ $orphan->m_d }}
                                     </span>
                                 </div>
                             </td>
                             <td class="p-3">
-                                <div class="font-medium text-gray-800"><span class="text-gray-400 font-normal">الوكيل:</span> {{ $orphan->a_name ?? '-' }}</div>
+                                <div class="font-medium text-gray-800"><span
+                                        class="text-gray-400 font-normal">الوكيل:</span> {{ $orphan->a_name ?? '-' }}
+                                </div>
                                 <div class="text-[11px] text-gray-400 mt-0.5">
                                     {{ $orphan->department?->name ?? 'غير محدد' }}:
                                     {{ $orphan->mosque?->name ?? 'غير محدد' }}</div>
                             </td>
                             <td class="p-3">
-                                <div class="text-[11px] text-gray-400 mt-0.5"> {{ $orphan->mobile ?? 'لا يوجد' }}</div>
-                                <div class="text-[11px] text-gray-400 mt-0.5"> {{ $orphan->mobile2 ?? 'لا يوجد' }}</div>
+                                <div class="text-[11px] text-gray-400 mt-0.5"> {{ $orphan->mobile ?? 'لا يوجد' }}
+                                </div>
+                                <div class="text-[11px] text-gray-400 mt-0.5"> {{ $orphan->mobile2 ?? 'لا يوجد' }}
+                                </div>
                             </td>
-                            {{-- زر تعديل اليتيم المضاف حديثاً داخل عمود العمليات --}}
                             <td class="p-3 text-center">
-                                <a href="{{ route('orphans.edit', $orphan->id) }}" wire:navigate 
-                                   class="inline-flex items-center justify-center p-1.5 text-blue-600 hover:bg-blue-50 hover:text-blue-700 rounded-lg transition" 
-                                   title="تعديل بيانات اليتيم">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                                @can('orphan.update')
+                                <a href="{{ route('orphans.edit', $orphan->id) }}" wire:navigate
+                                    class="inline-flex items-center justify-center p-1.5 text-blue-600 hover:bg-blue-50 hover:text-blue-700 rounded-lg transition"
+                                    title="تعديل بيانات اليتيم">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none"
+                                        viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                                     </svg>
                                 </a>
+                                @endcan
+                                @can('orphan.delete')
+                                <button wire:click="deleteOrphan({{ $orphan->id }})"
+                                    class="inline-flex items-center justify-center p-1.5 text-red-600 hover:bg-red-50 hover:text-red-700 rounded-lg transition"
+                                    title="حذف اليتيم">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none"
+                                        viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 5v1m4 0h-.5m-4 0H9m5-1v1m0-1h.5M9 7h.5M9 7h.5M9 7H9m5-3v3M9 7l3.333 3m4.667-3l-4.667 3" />
+                                    </svg>
+                                </button>
+                                @endcan
                             </td>
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="7" class="p-8 text-center text-gray-400 bg-gray-50/50">لا توجد نتائج تطابق التصفية المطلوبة.</td>
+                            <td colspan="7" class="p-8 text-center text-gray-400 bg-gray-50/50">لا توجد نتائج تطابق
+                                التصفية المطلوبة.</td>
                         </tr>
                     @endforelse
                 </tbody>

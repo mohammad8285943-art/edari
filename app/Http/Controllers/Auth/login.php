@@ -10,6 +10,7 @@ class login extends Controller
 {
     public function index()
     {
+
         return view('login');
     }
 
@@ -18,7 +19,7 @@ class login extends Controller
         $request->validate([
             'username' => 'required|string|max:255',
             'password' => 'required|string|min:8',
-        ]);
+            ]);
         if (Auth::guard('web')->attempt(['username' => $request->username, 'password' => $request->password]) && auth()->user()->active == 1) {
             return redirect()->route('main');
         } else {

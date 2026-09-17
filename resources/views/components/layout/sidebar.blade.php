@@ -16,7 +16,8 @@
                         </path>
                     </svg>
                 </div>
-                <div class="min-w-0 transition-all duration-200" :class="sidebarCollapsed ? 'md:w-0 md:opacity-0' : 'opacity-100'">
+                <div class="min-w-0 transition-all duration-200"
+                    :class="sidebarCollapsed ? 'md:w-0 md:opacity-0' : 'opacity-100'">
                     <h2 class="truncate text-base font-bold text-gray-900">لوحة التحكم</h2>
                     <p class="truncate text-xs text-gray-400">إدارة النظام</p>
                 </div>
@@ -46,9 +47,33 @@
                     الرئيسية
                 </span>
             </a>
+            <a href="{{ route('search') }}" wire:navigate
+                class="group relative flex items-center gap-3 rounded-xl px-3 py-3 text-sm font-medium transition
+    {{ request()->routeIs('search')
+        ? 'bg-emerald-600 text-white shadow-sm'
+        : 'text-gray-600 hover:bg-gray-50 hover:text-gray-950' }}"
+                :class="sidebarCollapsed ? 'md:justify-center' : ''">
 
+                <svg class="h-5 w-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M21 21l-4.35-4.35m2.35-5.65a8 8 0 11-16 0 8 8 0 0116 0z">
+                    </path>
+                </svg>
+
+                <span class="min-w-0 flex-1 truncate transition-all duration-200"
+                    :class="sidebarCollapsed ? 'md:w-0 md:flex-none md:opacity-0' : 'opacity-100'">
+                    بحث
+                </span>
+
+                <span x-show="sidebarCollapsed" x-cloak
+                    class="pointer-events-none absolute right-full top-1/2 z-50 mr-3 hidden -translate-y-1/2 whitespace-nowrap rounded-lg bg-gray-900 px-2.5 py-1.5 text-xs text-white opacity-0 shadow-lg transition group-hover:opacity-100 md:block">
+                    بحث
+                </span>
+            </a>
+            {{--
             <div>
-                <button type="button" @click="sidebarCollapsed ? sidebarCollapsed = false : menus.projects = !menus.projects"
+                <button type="button"
+                    @click="sidebarCollapsed ? sidebarCollapsed = false : menus.projects = !menus.projects"
                     class="group relative flex w-full items-center gap-3 rounded-xl px-3 py-3 text-sm font-medium text-gray-600 transition hover:bg-gray-50 hover:text-gray-950"
                     :class="sidebarCollapsed ? 'md:justify-center' : ''">
                     <svg class="h-5 w-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -70,24 +95,29 @@
                     </span>
                 </button>
 
-                <div class="submenu-transition grid pr-5" :class="menus.projects && !sidebarCollapsed ? 'grid-rows-[1fr] opacity-100' : 'grid-rows-[0fr] opacity-0'">
+                <div class="submenu-transition grid pr-5"
+                    :class="menus.projects && !sidebarCollapsed ? 'grid-rows-[1fr] opacity-100' : 'grid-rows-[0fr] opacity-0'">
                     <div class="overflow-hidden">
                         <div class="mt-1 space-y-1 border-r border-gray-100 pr-3">
                             <a href="#"
-                                class="block rounded-lg px-3 py-2 text-sm text-gray-500 transition hover:bg-emerald-50 hover:text-emerald-700">سقيا الماء وحفر الآبار</a>
+                                class="block rounded-lg px-3 py-2 text-sm text-gray-500 transition hover:bg-emerald-50 hover:text-emerald-700">سقيا
+                                الماء وحفر الآبار</a>
                             <a href="#"
-                                class="block rounded-lg px-3 py-2 text-sm text-gray-500 transition hover:bg-emerald-50 hover:text-emerald-700">السلال الغذائية الطارئة</a>
+                                class="block rounded-lg px-3 py-2 text-sm text-gray-500 transition hover:bg-emerald-50 hover:text-emerald-700">السلال
+                                الغذائية الطارئة</a>
                             <a href="#"
-                                class="block rounded-lg px-3 py-2 text-sm text-gray-500 transition hover:bg-emerald-50 hover:text-emerald-700">ترميم البيوت والخيام</a>
+                                class="block rounded-lg px-3 py-2 text-sm text-gray-500 transition hover:bg-emerald-50 hover:text-emerald-700">ترميم
+                                البيوت والخيام</a>
                         </div>
                     </div>
                 </div>
-            </div>
+            </div> --}}
 
             @can('orphan.view')
                 <div>
-                    <button type="button" @click="sidebarCollapsed ? sidebarCollapsed = false : menus.orphan = !menus.orphan"
-                        class="group relative flex w-full items-center gap-3 rounded-xl px-3 py-3 text-sm font-medium transition {{ request()->routeIs('orphan.*') ? 'bg-emerald-50 text-emerald-700 ring-1 ring-emerald-100' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-950' }}"
+                    <button type="button"
+                        @click="sidebarCollapsed ? sidebarCollapsed = false : menus.orphan = !menus.orphan"
+                        class="group relative flex w-full items-center gap-3 rounded-xl px-3 py-3 text-sm font-medium transition {{ request()->routeIs('orphan*') ? 'bg-emerald-50 text-emerald-700 ring-1 ring-emerald-100' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-950' }}"
                         :class="sidebarCollapsed ? 'md:justify-center' : ''">
                         <svg class="h-5 w-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -95,7 +125,8 @@
                             </path>
                         </svg>
                         <span class="min-w-0 flex-1 truncate text-right transition-all duration-200"
-                            :class="sidebarCollapsed ? 'md:w-0 md:flex-none md:opacity-0' : 'opacity-100'">ملف الأيتام والأرامل</span>
+                            :class="sidebarCollapsed ? 'md:w-0 md:flex-none md:opacity-0' : 'opacity-100'">ملف الأيتام
+                            والأرامل</span>
                         <svg class="h-4 w-4 shrink-0 transition-all duration-200"
                             :class="{ 'rotate-180': menus.orphan, 'md:hidden': sidebarCollapsed }" fill="none"
                             stroke="currentColor" viewBox="0 0 24 24">
@@ -108,13 +139,29 @@
                         </span>
                     </button>
 
-                    <div class="submenu-transition grid pr-5" :class="menus.orphan && !sidebarCollapsed ? 'grid-rows-[1fr] opacity-100' : 'grid-rows-[0fr] opacity-0'">
+                    <div class="submenu-transition grid pr-5"
+                        :class="menus.orphan && !sidebarCollapsed ? 'grid-rows-[1fr] opacity-100' : 'grid-rows-[0fr] opacity-0'">
                         <div class="overflow-hidden">
                             <div class="mt-1 space-y-1 border-r border-gray-100 pr-3">
                                 <a href="{{ route('orphan.index') }}" wire:navigate
                                     class="block rounded-lg px-3 py-2 text-sm transition {{ request()->routeIs('orphan.index') ? 'bg-emerald-600 text-white shadow-sm' : 'text-gray-500 hover:bg-emerald-50 hover:text-emerald-700' }}">الأيتام</a>
-                                <a href="#" wire:navigate
-                                    class="block rounded-lg px-3 py-2 text-sm text-gray-500 transition hover:bg-emerald-50 hover:text-emerald-700">الكفالات</a>
+                                @can('orphan.guarantees')
+                                    <a href="{{ route('orphans.guarantee') }}" wire:navigate
+                                        class="block rounded-lg px-3 py-2 text-sm {{ request()->routeIs('orphans.guarantee') ? 'bg-emerald-600 text-white shadow-sm' : 'text-gray-500 hover:bg-emerald-50 hover:text-emerald-700' }}">الكفالات</a>
+                                @endcan
+                                @can('orphan.widows')
+                                    <a href="{{ route('orphans.widows') }}" wire:navigate
+                                        class="block rounded-lg px-3 py-2 text-sm {{ request()->routeIs('orphans.widows') ? 'bg-emerald-600 text-white shadow-sm' : 'text-gray-500 hover:bg-emerald-50 hover:text-emerald-700' }}">الأرامل</a>
+                                @endcan
+
+                                @can('orphan.aids.view')
+                                    <a href="{{ route('orphans.aids.index') }}" wire:navigate
+                                        class="block rounded-lg px-3 py-2 text-sm {{ request()->routeIs('orphans.aids.*') ? 'bg-emerald-600 text-white shadow-sm' : 'text-gray-500 hover:bg-emerald-50 hover:text-emerald-700' }}">المساعدات</a>
+                                @endcan
+                                @can('orphan.reports')
+                                    <a href="{{ route('orphans.reports') }}" wire:navigate
+                                        class="block rounded-lg px-3 py-2 text-sm {{ request()->routeIs('orphans.reports') ? 'bg-emerald-600 text-white shadow-sm' : 'text-gray-500 hover:bg-emerald-50 hover:text-emerald-700' }}">التقارير</a>
+                                @endcan
                             </div>
                         </div>
                     </div>
@@ -131,10 +178,36 @@
                         </path>
                     </svg>
                     <span class="min-w-0 flex-1 truncate transition-all duration-200"
-                        :class="sidebarCollapsed ? 'md:w-0 md:flex-none md:opacity-0' : 'opacity-100'">إدارة المستخدمين</span>
+                        :class="sidebarCollapsed ? 'md:w-0 md:flex-none md:opacity-0' : 'opacity-100'">إدارة
+                        المستخدمين</span>
                     <span x-show="sidebarCollapsed" x-cloak
                         class="pointer-events-none absolute right-full top-1/2 z-50 mr-3 hidden -translate-y-1/2 whitespace-nowrap rounded-lg bg-gray-900 px-2.5 py-1.5 text-xs text-white opacity-0 shadow-lg transition group-hover:opacity-100 md:block">
                         إدارة المستخدمين
+                    </span>
+                </a>
+                <a href="{{ route('users.active') }}" wire:navigate
+                    class="group relative flex items-center gap-3 rounded-xl px-3 py-3 text-sm font-medium transition
+    {{ request()->routeIs('users.active')
+        ? 'bg-emerald-600 text-white shadow-sm'
+        : 'text-gray-600 hover:bg-gray-50 hover:text-gray-950' }}"
+                    :class="sidebarCollapsed ? 'md:justify-center' : ''">
+
+                    <svg class="h-5 w-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 21v-2a4 4 0 00-4-4H6a4 4 0 00-4 4v2
+                           M9 11a4 4 0 100-8 4 4 0 000 8
+                           M22 21v-2a4 4 0 00-3-3.87
+                           M16 3.13a4 4 0 010 7.75">
+                        </path>
+                    </svg>
+
+                    <span class="min-w-0 flex-1 truncate transition-all duration-200"
+                        :class="sidebarCollapsed ? 'md:w-0 md:flex-none md:opacity-0' : 'opacity-100'">
+                        المستخدمين النشطين
+                    </span>
+
+                    <span x-show="sidebarCollapsed" x-cloak
+                        class="pointer-events-none absolute right-full top-1/2 z-50 mr-3 hidden -translate-y-1/2 whitespace-nowrap rounded-lg bg-gray-900 px-2.5 py-1.5 text-xs text-white opacity-0 shadow-lg transition group-hover:opacity-100 md:block">
+                        المستخدمين النشطين
                     </span>
                 </a>
             @endcan
@@ -142,9 +215,12 @@
     </div>
 
     <div class="border-t border-gray-100 bg-white p-3">
-        <div class="flex items-center gap-3 rounded-xl p-2 transition hover:bg-gray-50"
+        <a href="{{ route('profile') }}" wire:navigate
+            class="group flex items-center gap-3 rounded-xl p-2 transition
+            {{ request()->routeIs('profile') ? 'bg-emerald-50 ring-1 ring-emerald-100' : 'hover:bg-gray-50' }}"
             :class="sidebarCollapsed ? 'md:justify-center' : ''">
-            <div class="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-gray-900 text-sm font-bold text-white shadow-sm">
+            <div
+                class="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-gray-900 text-sm font-bold text-white shadow-sm">
                 {{ auth()->user()->name[0] }}
             </div>
             <div class="min-w-0 overflow-hidden whitespace-nowrap transition-all duration-200"
@@ -152,6 +228,6 @@
                 <h4 class="truncate text-sm font-bold text-gray-900">{{ auth()->user()->name }}</h4>
                 <p class="truncate text-xs text-gray-400">{{ auth()->user()->role }}</p>
             </div>
-        </div>
+        </a>
     </div>
 </aside>

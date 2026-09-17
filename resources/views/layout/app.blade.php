@@ -23,6 +23,64 @@
         [x-cloak] {
             display: none !important;
         }
+        @media print {
+    /* إخفاء عناصر التحكم والأزرار غير اللازمة */
+    .no-print,
+    header,
+    aside,
+    nav,
+    footer,
+    button {
+        display: none !important;
+    }
+
+    /* إلغاء حدود التمرير والارتفاع لتسمح بانسياب الطباعة */
+    html, body, main {
+        overflow: visible !important;
+        height: auto !important;
+        background: #ffffff !important;
+        padding: 0 !important;
+        margin: 0 !important;
+    }
+
+    /* ضمان تمدد حاوية النتائج بعرض الصفحة كاملة */
+    .print-area {
+        width: 100% !important;
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+
+    /* منع انكسار الجداول وبطاقات البيانات عبر الصفحات */
+    table {
+        page-break-inside: auto;
+        width: 100% !important;
+        border-collapse: collapse !important;
+    }
+
+    thead {
+        display: table-header-group !important;
+    }
+
+    tr {
+        page-break-inside: avoid !important;
+        page-break-after: auto !important;
+    }
+
+    .print-break-inside-avoid {
+        page-break-inside: avoid !important;
+    }
+
+    /* تعزيز ظهور الحدود والنصوص عند استخدام الحبر الرمادي */
+    th, td {
+        border-color: #e5e7eb !important;
+        color: #111827 !important;
+    }
+
+    @page {
+        size: A4 portrait;
+        margin: 12mm 10mm;
+    }
+}
     </style>
 </head>
 
@@ -35,7 +93,7 @@
         class="fixed inset-0 z-30 bg-gray-900/40 md:hidden"></div>
 
     <div class="flex-1 flex flex-col overflow-hidden w-full">
-        <header class="h-16 bg-white border-b border-gray-200 flex items-center justify-between px-6 z-30">
+        <header class="print-hidden h-16 bg-white border-b border-gray-200 flex items-center justify-between px-6 z-30">
             <div class="flex items-center gap-4">
                 <button type="button"
                     @click="window.innerWidth < 768 ? sidebarOpen = true : sidebarCollapsed = !sidebarCollapsed"
