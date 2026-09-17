@@ -224,13 +224,13 @@ class OrphanIndex extends Component
         return collect();
     }
 
-    // delete orphan
+    // soft delete orphan
     public function deleteOrphan($orphanId)
     {
         abort_unless(Auth::user()->can('orphan.delete'), 403);
         $orphan = Orphan::find($orphanId);
         if ($orphan) {
-            $orphan->delete();
+            $orphan->Delete();
         }
     }
 

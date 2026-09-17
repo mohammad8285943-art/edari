@@ -301,7 +301,7 @@ class OrphanFormRequest extends Form
             ],
             'wallet_number' => ['nullable', 'string', 'max:50'],
             'wallet_owner_name' => ['nullable', 'string', 'max:255'],
-            'wallet_type' => ['nullable', 'in:بنك فلسطين,بال باي,حوال باي'],
+            'wallet_type' => ['nullable', 'in:بنك فلسطين,بال باي,جوال باي'],
 
             // الأب
             'f_d_s' => ['nullable', 'string', 'max:10'],
@@ -317,9 +317,9 @@ class OrphanFormRequest extends Form
             // الأم
             'm_ssn' => ['nullable', 'digits:9'],
             'm_name' => ['nullable', 'string', 'max:100'],
-            'm_d' => ['nullable', 'string', 'max:10'],
+            'm_d' => ['nullable', 'string', 'max:20'],
             'm_data_d' => ['nullable', 'date'],
-            'm_marital' => ['nullable', 'string', 'max:10'],
+            'm_marital' => ['nullable', 'string', 'max:50'],
             'm_gas_mobile' => ['nullable', 'numeric'],
             'm_work' => ['nullable', 'string', 'max:50'],
 
@@ -327,12 +327,12 @@ class OrphanFormRequest extends Form
             'a_ssn' => ['nullable', 'digits:9'],
             'a_name' => ['nullable', 'string', 'max:100'],
             'a_sex' => ['nullable', 'in:ذكر,أنثى'],
-            'a_marital' => ['nullable', 'string', 'max:10'],
+            'a_marital' => ['nullable', 'string', 'max:50'],
             'relation' => ['nullable', 'string', 'max:10'],
 
             // الاتصال
-            'mobile' => ['nullable', 'string', 'max:15'],
-            'mobile2' => ['nullable', 'string', 'max:15'],
+            'mobile' => ['nullable', 'digits:15'],
+            'mobile2' => ['nullable', 'digits:15'],
 
             // باقي البيانات
             'اعتماد_الوكيل_من' => ['nullable', 'string', 'max:20'],
@@ -462,7 +462,20 @@ class OrphanFormRequest extends Form
                 $data[$dateField] = null;
             }
         }
-
+        // تحويل القيم الرقمية الفارغة إلى NULL
+        foreach ([
+            'm_gas_mobile',
+            'm_ssn',
+            'f_ssn',
+            'a_ssn',
+            'count_family',
+            'department_id',
+            'mosque_id',
+        ] as $field) {
+            if (isset($data[$field]) && $data[$field] === '') {
+                $data[$field] = null;
+            }
+        }
         // حساب العمر
         if ($this->barth) {
             $data['age'] = Carbon::parse($this->barth)->diffInYears(Carbon::now());
