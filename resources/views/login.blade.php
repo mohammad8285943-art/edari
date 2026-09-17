@@ -26,10 +26,9 @@
 
         <div class="text-center mb-8">
             <div class="inline-flex items-center justify-center w-16 h-16 bg-emerald-50 text-emerald-600 rounded-2xl border border-emerald-100 text-2xl font-bold mb-3 shadow-sm">
-                MM
+                M
             </div>
             <h1 class="text-2xl font-bold text-gray-800">تسجيل الدخول</h1>
-            <p class="text-sm text-gray-500 mt-1">جمعية غزة الخيرية</p>
         </div>
 
         <form id="secure-login-form" class="space-y-5" method="post" action="{{ route('login') }}">

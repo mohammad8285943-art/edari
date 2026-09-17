@@ -19,7 +19,7 @@ use App\Livewire\ActiveSessionsManager;
 use App\Livewire\BeneficiarySearch;
 use App\Livewire\Profile;
 
-Route::view('/', 'cv')->name('cv');
+Route::view('/', 'home')->name('home');
 
 Route::get('/login', [login::class, 'index'])->name('login');
 Route::post('/login', [login::class, 'login']);

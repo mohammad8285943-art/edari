@@ -262,6 +262,7 @@
                             <label class="block font-medium text-gray-500 mb-1">نوع المساعدة</label>
                             <select wire:model="form_type"
                                 class="w-full px-2 py-1.5 border border-black rounded-lg outline-none focus:border-indigo-500 bg-white">
+                                <option value="">اختر نوع المساعدة</option>
                                 <option value="طرد">طرد</option>
                             <option value="نقدي">نقدي</option>
                             <option value="كسوة">كسوة</option>
